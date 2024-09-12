@@ -2,8 +2,8 @@ float $SnowmanBottom = 3;
 float $SnowmanMiddle = 2;
 float $SnowmanTop = 1;
 
-int $addHat = 0;
-int $randomizePosition = 1;
+int $addHat = 1;
+int $randomizePosition = 0;
 
 
 polySphere -r $SnowmanBottom -name "BottomSphere";
@@ -24,6 +24,6 @@ if ($addHat == 1) {
 if ($randomizePosition == 1) {
     float $randX = rand(-5, 5);
     move $randX 0 0 "BottomSphere";
-    move $randX ($bottomRadius * 2 + $middleRadius) 0 "MiddleSphere";
-    move $randX ($bottomRadius * 2 + $middleRadius * 2 + $topRadius) 0 "TopSphere";
+    move $randX ($SnowmanBottom * 1 + $SnowmanMiddle) 0 "MiddleSphere";
+    move $randX ($SnowmanBottom * 1 + $SnowmanMiddle * 2 + $SnowmanTop) 0 "TopSphere";
 }
