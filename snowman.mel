@@ -1,29 +1,60 @@
-float $SnowmanBottom = 3;
-float $SnowmanMiddle = 2;
-float $SnowmanTop = 1;
+// Declare global variables for all parameters
+global int $totalStairs;         // Number of stairs to be created
+global float $stepLength;        // Stair length
+global float $stepWidth;         // Stair width
+global float $stepHeight;        // Stair height
+global float $radius;            // Stair pivot point or offset (distance from center)
+global float $stepRise;          // Step height (vertical rise per step)
+global float $stepRotation;      // Step rotation (degrees between each step)
+global float $stepGap;           // Gap between the steps
 
-int $addHat = 0;
-int $randomizePosition = 1;
+// Define the staircase generation function
+global proc GenerateStaircase()
+{
+    // Access the global variables inside the function
+    global int $totalStairs;
+    global float $stepLength;
+    global float $stepWidth;
+    global float $stepHeight;
+    global float $radius;
+    global float $stepRise;
+    global float $stepRotation;
+    global float $stepGap;
 
+    // Loop through the total number of stairs
+    for ($i = 0; $i < $totalStairs; $i++)
+    {
+        // Create a step (cube)
+        string $step[] = `polyCube -w $stepWidth -h $stepHeight -d $stepLength`;
 
-polySphere -r $SnowmanBottom -name "BottomSphere";
-move 0 $SnowmanBottom 0 "BottomSphere";
+        // Calculate the position and rotation for each step
+        float $x = sin(deg_to_rad($i * $stepRotation)) * $radius;
+        float $y = $i * ($stepRise + $stepGap); // Adjust y position based on step rise and gap
+        float $z = cos(deg_to_rad($i * $stepRotation)) * $radius;
 
-polySphere -r $SnowmanMiddle -name "MiddleSphere";
-move 0 ($SnowmanBottom * 2 + $SnowmanMiddle) 0 "MiddleSphere";
+        // Move step to calculated position around the central point
+        move $x $y $z $step[0];
 
-polySphere -r $SnowmanTop -name "TopSphere";
-move 0 ($SnowmanBottom * 2 +$SnowmanMiddle * 2 + $SnowmanTop) 0 "TopSphere";
-
-
-if ($addHat == 1) {
-    polyCone -r 0.5 -h 1 -name "Snowman_Hat";
-    move 0 ($SnowmanBottom * 2 + $SnowmanMiddle * 2 + $SnowmanTop * 2 + 0.5) 0 "Snowman_Hat";
+        // Rotate step to create the spiral
+        rotate 0 ($i * $stepRotation) 0 $step[0];
+    }
 }
 
-if ($randomizePosition == 1) {
-    float $randX = rand(-5, 5);
-    move $randX 0 0 "BottomSphere";
-    move $randX ($bottomRadius * 2 + $middleRadius) 0 "MiddleSphere";
-    move $randX ($bottomRadius * 2 + $middleRadius * 2 + $topRadius) 0 "TopSphere";
+// Helper function to convert degrees to radians (since Maya's trig functions use radians)
+global proc float deg_to_rad(float $degrees)
+{
+    return $degrees * 3.14159 / 180.0;
 }
+
+// Set the global variables with default values for demonstration
+global int $totalStairs =50;        // Number of stairs
+global float $stepLength = 8.0;      // Length of each stair
+global float $stepWidth = 3.0;       // Width of each stair
+global float $stepHeight = 0.5;      // Height of each stair
+global float $radius = 5.0;          // Distance from the center (pivot offset)
+global float $stepRise = 2.0;        // Vertical rise per step
+global float $stepRotation = 25.0;   // Rotation angle per step in degrees
+global float $stepGap = 0.0;         // Gap between the stairs (0 = no gap)
+
+// Example function call: no parameters needed as global variables are used
+GenerateStaircase();
