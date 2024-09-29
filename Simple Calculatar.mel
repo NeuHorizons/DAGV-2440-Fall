@@ -1,0 +1,53 @@
+print "Select a option:\n";
+print "1. ADD\n";
+print "2. SUBTRACT\n";
+print "3. MULTIPLY\n";
+print "4. DIVIDE\n";
+
+int $resultDialog = `promptDialog -message "Enter operation (1-4):" -button "OK" -button "Cancel" -defaultButton "OK" -cancelButton "Cancel" -dismissString "Cancel"`;
+string $operation = "";
+if ($resultDialog == "OK") {
+    $operation = `promptDialog -query -text`;
+} else {
+    print ("Operation canceled.\n");
+    return;
+}
+
+global proc float getNumber(string $message) {
+    int $result = `promptDialog -message $message -button "OK" -button "Cancel" -defaultButton "OK" -cancelButton "Cancel" -dismissString "Cancel"`;
+    if ($result == "OK") {
+        string $numStr = `promptDialog -query -text`;
+        float $numValue = `float $numStr`;
+        return $numValue;
+    } else {
+        error "Input canceled.\n";
+        return 0;
+    }
+}
+
+float $num1 = getNumber("Enter first number:");
+float $num2 = getNumber("Enter second number:");
+
+if ($operation == "1") {
+    float $result = $num1 + $num2;
+    print ("The sum is " + $result + "\n");
+} 
+else if ($operation == "2") {
+    float $result = $num1 - $num2;
+    print ("The difference is " + $result + "\n");
+} 
+else if ($operation == "3") {
+    float $result = $num1 * $num2;
+    print ("The product is " + $result + "\n");
+} 
+else if ($operation == "4") {
+    if ($num2 != 0) {
+        float $result = $num1 / $num2;
+        print ("The result is " + $result + "\n");
+    } else {
+        print ("Cannot divide by zero\n");
+    }
+} 
+else {
+    print ("Invalid Entry\n");
+}
