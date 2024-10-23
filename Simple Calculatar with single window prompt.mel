@@ -1,0 +1,59 @@
+global proc createCalculatorUI() {
+    
+    if (`window -exists calcWindow`) {
+        deleteUI calcWindow;
+    }
+    
+    
+    window -title "Calculator" -widthHeight 300 200 calcWindow;
+
+    
+    columnLayout -adjustableColumn true;
+    
+    
+    text -label "Enter First Number:";
+    floatField -minValue -100000 -maxValue 100000 firstNumField;
+
+    text -label "Enter Second Number:";
+    floatField -minValue -100000 -maxValue 100000 secondNumField;
+
+    
+    button -label "Add" -command "performOperation(\"add\")";
+    button -label "Subtract" -command "performOperation(\"subtract\")";
+    button -label "Multiply" -command "performOperation(\"multiply\")";
+    button -label "Divide" -command "performOperation(\"divide\")";
+    
+    
+    text -label "Result:";
+    textField -editable false resultField;
+
+    
+    showWindow calcWindow;
+}
+
+global proc performOperation(string $operation) {
+    float $num1 = `floatField -query -value firstNumField`;
+    float $num2 = `floatField -query -value secondNumField`;
+    float $result = 0;
+    
+        if ($operation == "add") {
+        $result = $num1 + $num2;
+    } else if ($operation == "subtract") {
+        $result = $num1 - $num2;
+    } else if ($operation == "multiply") {
+        $result = $num1 * $num2;
+    } else if ($operation == "divide") {
+        if ($num2 != 0) {
+            $result = $num1 / $num2;
+        } else {
+                        textField -edit -text "Error: Division by 0" resultField;
+            return;
+        }
+    }
+
+    
+    textField -edit -text ("" + $result) resultField;
+}
+
+// ok once you input this the window will pop up and you have the option to input numbers in the first two boxes and then push a button like add and subtract and it will show the answer at the bottom 
+createCalculatorUI(); 
